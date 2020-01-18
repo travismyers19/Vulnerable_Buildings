@@ -5,34 +5,20 @@
 import csv
 import numpy as np
 import sys
+import requests
 
-if len(sys.argv) < 2:
-    print('Please provide a google api key.')
-    sys.exit()
-
-api_key = sys.argv[1]
-print(api_key)
 number_of_addresses = 100
 min_latitude = 37.631
 min_lngitude = -122.5209
 max_latitude = 37.8235
 max_lngitude = -122.173
 csv_file = open('random_addresses.csv', 'w')
+if len(sys.argv) < 2:
+    print('Please provide a google api key.')
+    sys.exit()
+api_key = sys.argv[1]
 
 def get_address(api_key, latitude, longitude):
-    """
-    Returns the address of a location using the Google Maps Geocoding API. 
-    API: https://developers.google.com/maps/documentation/geocoding/start
-
-    # INPUT -------------------------------------------------------------------
-    apiKey                  [str]
-    latitude                [float]
-    longitude               [float]
-
-    # RETURN ------------------------------------------------------------------
-    address                 [str] 
-    """
-    import requests
     url = ('https://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&key={}'.format(latitude, longitude, api_key))
     try:
         response = requests.get(url)
