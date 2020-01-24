@@ -1,11 +1,22 @@
 import requests
 import numpy as np
 import csv
+from PIL import Image
+import io
+
+def write_image_to_file(image, full_filename):
+    np_image = Image.open(io.BytesIO(image))
+    np_image = np.asarray(np_image)
+
+    with open(full_filename, 'wb') as jpg_file:
+        jpg_file.write(image)
 
 class Addresses:
-    def __init__(self, api_key):
+    def __init__(self, api_key_filename='/home/ubuntu/Insight/google_api_key.txt'):
         self.addresses = None
-        self.api_key = api_key
+
+        with open(api_key_filename) as api_key_file:
+            self.api_key = api_key_file.read()
 
     def get_image(self, address_index, image_size=299, image_pitch=10):
         try:
@@ -15,7 +26,7 @@ class Addresses:
             response = requests.get(url)
             image = response.content
         except:
-            print('Error getting image')
+            print('Error getting image from address')
             image = None
         return image
 
@@ -26,15 +37,15 @@ class Addresses:
             resp_json_payload = response.json()
             address = resp_json_payload['results'][0]['formatted_address']
         except:
-            print('ERROR')
+            print('Error getting address from latitude and longitude')
             address = None
         return address
 
     def create_random_addresses(self, number_of_addresses=100, min_latitude=37.631, max_latitude=37.8235, min_lngitude=-122.5209, max_lngitude=-122.173):
-        self.addresses = [None]*len(number_of_addresses)
+        self.addresses = [None]*number_of_addresses
 
         for address_index in range(number_of_addresses):
-            while True:
+            for _ in range(100):
                 latitude = np.random.uniform(min_latitude, max_latitude)
                 lngitude = np.random.uniform(min_lngitude, max_lngitude)
                 address = self.get_address(latitude, lngitude)
@@ -44,9 +55,17 @@ class Addresses:
 
             self.addresses[address_index] = address
 
+    def read_addresses_from_csv(self, csv_filename, address_column=0):
+        with open(csv_filename, 'w') as csv_file:
+            reader = csv.reader(csv_file)
+            row_number = 0
+
+            for row in reader:
+                self.addresses[row_number] = row[address_column]
+
     def write_addresses_to_csv(self, csv_filename):
-        with open(csv_filename) as file:
-            writer = csv.writer(file)
+        with open(csv_filename, 'w') as csv_file:
+            writer = csv.writer(csv_file)
 
             for address in self.addresses:
                 writer.writerow([address])
