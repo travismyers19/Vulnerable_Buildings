@@ -3,21 +3,21 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+if __name__ == '__main__':
+    metrics = np.load('/home/ubuntu/Insight/s3mnt/Models/BinaryFocalLoss/soft_metrics_1_5_1GPU.npy')
+    #metrics = np.concatenate((metrics_1_5, metrics_6_10, metrics_11_15, metrics_16_35), axis=1)
+    accuracy = metrics[0, :]
+    loss = metrics[1, :]
 
-training = np.load('training_accy2.npy')
-validatn = np.load('validatn_accy2.npy')
+    epochs = [x for x in range(len(accuracy))]
 
-
-
-epochs = [x for x in range(len(training))]
-
-plt.rcParams.update({'font.size': 15})
-fig, ax = plt.subplots()
-plt.gcf().subplots_adjust(bottom=0.21, left=0.21)
-plt.plot(epochs, training, epochs, validatn)
-plt.xlabel('Epochs')
-plt.ylabel('Categorical Accuracy')
-plt.xlim([0, len(training)])
-plt.ylim([0, max(max(training), max(validatn))])
-ax.legend(['Training', 'Validation'])
-st.pyplot()
+    plt.rcParams.update({'font.size': 15})
+    fig, ax = plt.subplots()
+    plt.gcf().subplots_adjust(bottom=0.21, left=0.21)
+    plt.plot(epochs, accuracy, epochs, loss)
+    plt.xlabel('Epochs')
+    plt.ylabel('Metric')
+    plt.xlim([0, len(accuracy)])
+    plt.ylim([0, max(max(accuracy), max(loss))])
+    ax.legend(['Accuracy', 'Loss'])
+    st.pyplot()

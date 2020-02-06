@@ -47,7 +47,7 @@ if button.button('Enter'):
         progress_bar.progress(address_index/number_of_addresses)
         image = addresses.get_image(address_index)
         image = np.expand_dims(preprocessing.image.img_to_array(Image.open(io.BytesIO(image))), axis=0)
-        print(image.shape)
+        image = image/255
         result = np.argmax(model.predict(image))
         if result == 0:
             number_of_bad_images += 1
