@@ -51,6 +51,7 @@ if __name__ == '__main__':
         number_of_non_soft_story = 0
         addresses_used = 0
 
+<<<<<<< HEAD
         while addresses_used < number_of_addresses:
             progress_bar.progress(addresses_used/number_of_addresses)
             addresses.create_random_addresses(number_of_addresses=1, min_latitude=min_latitude, max_latitude=max_latitude, min_lngitude=min_lngitude, max_lngitude=max_lngitude)
@@ -68,6 +69,36 @@ if __name__ == '__main__':
                 number_of_non_soft_story += 1
             if result == 2:
                 number_of_soft_story += 1
+=======
+if button.button('Enter'):
+    button.empty()
+    for slot in slots:
+        slot.empty()
+    
+    progress_text = st.empty()
+    progress_text.text('Processing')
+    progress_bar = st.empty()
+    progress_bar = st.progress(0)
+    model = load_model(model_filename)
+    addresses = Addresses()
+    addresses.create_random_addresses(number_of_addresses=number_of_addresses, min_latitude=min_latitude, max_latitude=max_latitude, min_lngitude=min_lngitude, max_lngitude=max_lngitude)
+    number_of_soft_story = 0
+    number_of_non_soft_story = 0
+    number_of_bad_images = 0
+    
+    for address_index in range(number_of_addresses):
+        progress_bar.progress(address_index/number_of_addresses)
+        image = addresses.get_image(address_index)
+        image = np.expand_dims(preprocessing.image.img_to_array(Image.open(io.BytesIO(image))), axis=0)
+        image = image/255
+        result = np.argmax(model.predict(image))
+        if result == 0:
+            number_of_bad_images += 1
+        elif result == 1:
+            number_of_non_soft_story += 1
+        else:
+            number_of_soft_story += 1
+>>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
 
         my_circle=plt.Circle( (0,0), 0.7, color='white')
         plt.pie([number_of_soft_story, number_of_non_soft_story], labels=["Soft-Story: " + str(number_of_soft_story), "Non-Soft-Story: " + str(number_of_non_soft_story)], colors=['blue','green'])

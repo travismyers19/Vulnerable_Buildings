@@ -4,7 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     metrics = np.load('Models/test_metrics.npy')
+=======
+    metrics = np.load('/home/ubuntu/Insight/s3mnt/Models/BinaryFocalLoss/soft_metrics_1_5_1GPU.npy')
+>>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
     #metrics = np.concatenate((metrics_1_5, metrics_6_10, metrics_11_15, metrics_16_35), axis=1)
     accuracy = metrics[0, :]
     loss = metrics[1, :]

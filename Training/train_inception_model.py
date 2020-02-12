@@ -8,6 +8,7 @@ if __name__ == '__main__':
     test_directory = os.getenv('TEST_DIRECTORY')
     trained_model_filename = os.getenv('TRAINED_MODEL_FILENAME')
     metrics_filename = os.getenv('METRICS_FILENAME')
+<<<<<<< HEAD
     binary = int(os.getenv('BINARY'))
     weights = None
     if not(binary):
@@ -15,3 +16,9 @@ if __name__ == '__main__':
 
     image_classifier = BuildingClassifier(model_filename)
     image_classifier.train_model(epochs, batch_size, training_directory, test_directory, trained_model_filename, metrics_filename, binary, weights)
+=======
+    binary = os.getenv('BINARY')
+
+    image_classifier = BuildingClassifier(model_filename)
+    image_classifier.train_model(epochs, batch_size, training_directory, test_directory, trained_model_filename, metrics_filename, binary=binary)
+>>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
