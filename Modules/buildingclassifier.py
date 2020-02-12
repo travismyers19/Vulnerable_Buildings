@@ -17,7 +17,6 @@ from tensorflow.python.ops import math_ops
 import customlosses
 
 class BuildingClassifier:
-<<<<<<< HEAD
     def __init__(self, model_filename, model2_filename=None):
         #If binary classifier, model_filename = good vs bad model, model2_filename = soft vs non-soft model
         self.model_filename = model_filename
@@ -30,10 +29,6 @@ class BuildingClassifier:
             self.model = load_model(self.model_filename, custom_objects={'focal_binary_crossentropy': customlosses.focal_binary_crossentropy, 'focal_categorical_crossentropy': customlosses.focal_categorical_crossentropy})
         if self.model2 is None and self.model2_filename is not None:
             self.model2 = load_model(self.model2_filename, custom_objects={'focal_binary_crossentropy': customlosses.focal_binary_crossentropy, 'focal_categorical_crossentropy': customlosses.focal_categorical_crossentropy})
-=======
-    def __init__(self, model_filename):
-        self.model_filename = model_filename
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
 
     def create_inception_model(self, number_categories, dense_layer_sizes, dropout_fraction, unfrozen_layers, focal_loss=False):
         hvd.init()
