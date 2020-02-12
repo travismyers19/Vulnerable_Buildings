@@ -3,8 +3,7 @@
 
 # the image is saved as "row.jpg", where row is the row number
 # from the csv file.
-import sys
-sys.path.insert(1, '../Product/addresses.py')
+
 from addresses import Addresses
 from addresses import write_image_to_file
 
@@ -19,7 +18,7 @@ def get_soft_story_images(image_folder, csv_filename, address_column, start_inde
         write_image_to_file(image, image_folder + str(address_indeximage) + '.jpg')
 
 if __name__ == '__main__':
-    image_folder = '/home/Insight/s3mnt/project_data/preprocessed/soft_story/'
+    image_folder = ''
     csv_filename = 'Soft-Story_Properties.csv'
     address_column = 4
     start_index = 0
