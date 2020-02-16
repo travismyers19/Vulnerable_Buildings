@@ -9,12 +9,12 @@ from tensorflow.keras import metrics
 import horovod.keras as hvd
 from tensorflow.keras.models import load_model
 import os
-from imagefunctions import load_image_for_prediction
+from Modules.imagefunctions import load_image_for_prediction
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 from tensorflow.keras import backend as K
 from tensorflow.python.ops import math_ops
-import customlosses
+from Modules import customlosses
 
 class BuildingClassifier:
     def __init__(self, model_filename, model2_filename=None):
@@ -67,14 +67,9 @@ class BuildingClassifier:
 
         model.compile(optimizer=opt, loss=loss, metrics=the_metrics)
         model.save(self.model_filename)
-<<<<<<< HEAD
         self.model = model
 
     def train_model(self, epochs, batch_size, training_directory, test_directory, trained_model_filename, metrics_filename, binary=False, weights=None):
-=======
-
-    def train_model(self, epochs, batch_size, training_directory, test_directory, trained_model_filename, metrics_filename, binary=False):
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
         # The metrics will be saved as a numpy array:
         # First row: training accuracy
         # Second row: validation (test) accuracy
@@ -87,11 +82,7 @@ class BuildingClassifier:
 
         hvd.init()
         callbacks = [hvd.callbacks.BroadcastGlobalVariablesCallback(0)]
-<<<<<<< HEAD
         self.load_model()
-=======
-        model = load_model(self.model_filename, custom_objects={'focal_binary_crossentropy': customlosses.focal_binary_crossentropy, 'focal_categorical_crossentropy': customlosses.focal_categorical_crossentropy})
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
         training_datagen = ImageDataGenerator(rescale=1./255., horizontal_flip=True)
         training_generator = training_datagen.flow_from_directory(
             directory = training_directory,
@@ -108,19 +99,13 @@ class BuildingClassifier:
         metrics = np.zeros((2, epochs))
 
         for epoch in range(epochs):
-<<<<<<< HEAD
             self.model.fit_generator(generator=training_generator, callbacks=callbacks, steps_per_epoch=training_generator.n//batch_size, class_weight=weights)
             result = self.model.evaluate_generator(validation_test_generator)
-=======
-            model.fit_generator(generator=training_generator, callbacks=callbacks, steps_per_epoch=training_generator.n//batch_size)
-            result = model.evaluate_generator(validation_test_generator)
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
             metrics[0, epoch] = result[1]
             metrics[1, epoch] = result[0]
             print('Validation Accuracy: ' + str(metrics[0, epoch]))
             print('Validation Loss: ' + str(metrics[1, epoch]))
 
-<<<<<<< HEAD
         self.model.save(trained_model_filename)
         np.save(metrics_filename, metrics)
         self.model_filename = trained_model_filename
@@ -146,22 +131,12 @@ class BuildingClassifier:
             return self.get_ternary_model_statistics(test_directory)
         return self.get_binary_model_statistics(test_directory)
 
-=======
-        model.save(trained_model_filename)
-        np.save(metrics_filename, metrics)
-        self.model_filename = trained_model_filename
-
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
     def get_ternary_model_statistics(self, test_directory):
         #Returns:  [accuracy, soft_precision, soft_recall, good_precision, good_recall]
         #soft = soft-story building, good = not a bad image
         #Assumes folder structure of test directory is bad_images, soft_story_images, non_soft_story_images
 
-<<<<<<< HEAD
         model = load_model(self.model_filename, custom_objects={'focal_binary_crossentropy': customlosses.focal_binary_crossentropy, 'focal_categorical_crossentropy': customlosses.focal_categorical_crossentropy})
-=======
-        model = load_model(self.model_filename)
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
         total_number = 0
         total_correct = 0
         soft_true_positive = 0
@@ -230,26 +205,15 @@ class BuildingClassifier:
         good_recall = good_true_positive/(good_true_positive + good_false_negative)
         return [accuracy, soft_precision, soft_recall, good_precision, good_recall]
 
-<<<<<<< HEAD
     def get_binary_model_statistics(self, test_directory):
         #The model stored in self.model_filename is the model that distinguishes good from bad
         #self.model2_filename stores the model that distinguishes good from bad
-=======
-    def get_binary__model_statistics(self, test_directory, second_model_filename):
-        #The model stored in self.model_filename is the model that distinguishes soft from non-soft
-        #second_model_filename stores the model that distinguishes good from bad
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
         #Returns:  [accuracy, soft_precision, soft_recall, good_precision, good_recall]
         #soft = soft-story building, good = not a bad image
         #Assumes folder structure of test directory is bad_images, soft_story_images, non_soft_story_images
 
-<<<<<<< HEAD
         good_model = load_model(self.model_filename, custom_objects={'focal_binary_crossentropy': customlosses.focal_binary_crossentropy, 'focal_categorical_crossentropy': customlosses.focal_categorical_crossentropy})
         soft_model = load_model(self.model2_filename, custom_objects={'focal_binary_crossentropy': customlosses.focal_binary_crossentropy, 'focal_categorical_crossentropy': customlosses.focal_categorical_crossentropy})
-=======
-        soft_model = load_model(self.model_filename)
-        good_model = load_model(second_model_filename)
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
         total_number = 0
         total_correct = 0
         soft_true_positive = 0
@@ -269,11 +233,7 @@ class BuildingClassifier:
                 prediction = good_model.predict(image)
                 if prediction > 0.5:
                     good_true_positive += 1
-<<<<<<< HEAD
                     prediction = soft_model.predict(image)
-=======
-                    prediction = soft_model.precict(image)
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
                     if prediction > 0.5:
                         soft_true_positive += 1
                         total_correct += 1
@@ -293,11 +253,7 @@ class BuildingClassifier:
                 prediction = good_model.predict(image)
                 if prediction > 0.5:
                     good_true_positive += 1
-<<<<<<< HEAD
                     prediction = soft_model.predict(image)
-=======
-                    prediction = soft_model.precict(image)
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
                     if prediction > 0.5:
                         soft_false_positive += 1
                     else:
@@ -315,11 +271,7 @@ class BuildingClassifier:
                 prediction = good_model.predict(image)
                 if prediction > 0.5:
                     good_false_positive += 1
-<<<<<<< HEAD
                     prediction = soft_model.predict(image)
-=======
-                    prediction = soft_model.precict(image)
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7
                     if prediction > 0.5:
                         soft_false_positive += 1
                 else:
@@ -330,9 +282,4 @@ class BuildingClassifier:
         soft_recall = soft_true_positive/(soft_true_positive + soft_false_negative)
         good_precision = good_true_positive/(good_true_positive + good_false_positive)
         good_recall = good_true_positive/(good_true_positive + good_false_negative)
-<<<<<<< HEAD
         return [accuracy, soft_precision, soft_recall, good_precision, good_recall]
-=======
-        return [accuracy, soft_precision, soft_recall, good_precision, good_recall]
-
->>>>>>> 6ba2785555e39efda145a8fe1006732a213805e7

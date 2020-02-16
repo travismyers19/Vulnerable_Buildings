@@ -1,5 +1,6 @@
-from buildingclassifier import BuildingClassifier
+from Modules.buildingclassifier import BuildingClassifier
 import os
+
 if __name__ == '__main__':
     model_filename = os.getenv('MODEL_FILENAME')
     epochs = int(os.getenv('EPOCHS'))

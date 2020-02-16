@@ -2,10 +2,17 @@ import numpy as np
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import argparse
 
 if __name__ == '__main__':
-    metrics = np.load('Models/test_metrics.npy')
-    #metrics = np.concatenate((metrics_1_5, metrics_6_10, metrics_11_15, metrics_16_35), axis=1)
+    parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
+    parser.add_argument(
+        "--metrics_filename", type=str, default='Models/metrics.npy',
+        help = "The file location of the saved npy file containing the metrics.  Default is 'Models/metrics.npy'.")
+    flags = parser.parse_args()
+
+    metrics_filename = flags.metrics_filename
+    metrics = np.load(metrics_filename)
     accuracy = metrics[0, :]
     loss = metrics[1, :]
 

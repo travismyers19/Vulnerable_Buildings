@@ -6,7 +6,7 @@ import io
 from tensorflow.keras import preprocessing
 
 class Addresses:
-    def __init__(self, api_key_filename=''):
+    def __init__(self, api_key_filename):
         self.addresses = None
 
         with open(api_key_filename) as api_key_file:

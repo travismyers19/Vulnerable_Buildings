@@ -12,19 +12,19 @@ HOSTS=("172.31.59.203")
 GPUS=(1)
 
 #The location of the data for training.
-export TRAINING_DIRECTORY="$(pwd)/Small_Data/"
+export TRAINING_DIRECTORY="Small_Data"
 
 #The location of the data for testing/validation.
-export TEST_DIRECTORY="$(pwd)/Small_Data/"
+export TEST_DIRECTORY="Small_Data"
 
 #The location of the model to train
-export MODEL_FILENAME="$(pwd)/Models/test_model.h5"
+export MODEL_FILENAME="Models/model.h5"
 
 #The location to save the trained model
-export TRAINED_MODEL_FILENAME="$(pwd)/Models/trained_test_model.h5"
+export TRAINED_MODEL_FILENAME="Models/trained_model.h5"
 
 #The location to save the training metrics (a numpy file)
-export METRICS_FILENAME="$(pwd)/Models/test_metrics.npy"
+export METRICS_FILENAME="Models/metrics.npy"
 
 #The weights to assign to each class (only if ternary classification)
 #0 = bad images, 1 = non soft-story, 2 = soft-story
@@ -52,4 +52,4 @@ for i in ${!HOSTS[@]}; do
     fi
 done
 
-horovodrun --verbose -np $TOTAL_GPUS -H $HOST_LIST python Training/train_inception_model.py
+horovodrun --verbose -np $TOTAL_GPUS -H $HOST_LIST python train_inception_model.py

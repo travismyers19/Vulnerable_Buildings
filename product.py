@@ -1,4 +1,4 @@
-from addresses import Addresses
+from Modules.addresses import Addresses
 import requests
 from tensorflow.keras.models import load_model
 import streamlit as st
@@ -7,14 +7,31 @@ import numpy as np
 import pandas as pd
 import io
 from PIL import Image
-from buildingclassifier import BuildingClassifier
-from imagefunctions import load_image_for_prediction
+from Modules.buildingclassifier import BuildingClassifier
+from Modules.imagefunctions import load_image_for_prediction
 import matplotlib.pyplot as plt
+import argparse
 
 if __name__ == '__main__':
     #If ternary classifier, set model2_filename=None
     #If binary classifier, model_filename = good vs bad model, model2_filename = soft vs non-soft model
-    image_classifier = BuildingClassifier(model_filename='Models/trained_test_model.h5', model2_filename=None)
+    parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
+    parser.add_argument(
+        "--api_key_filename", type=str, default='api-key.txt',
+        help = "The file location of a text file containing a Google API Key.  Default is 'api-key.txt'.")
+    parser.add_argument(
+        "--model_filename", type=str, default='Models/trained_model.h5',
+        help = "The file location of the model to serve.  Default is 'Models/trained_model.h5'.")
+    parser.add_argument(
+        "--model2_filename", type=str, default='None',
+        help = "If using a binary classifier, specify the file location of the second model.  If using a ternary classifier, set to 'None'.  Default is 'None'.")
+    flags = parser.parse_args()
+    api_key_filename = flags.api_key_filename
+    model_filename = flags.model_filename
+    model2_filename = flags.model2_filename
+    if model2_filename == 'None':
+        model2_filename = None
+    image_classifier = BuildingClassifier(model_filename=model_filename, model2_filename=model2_filename)
     
     st.title('Detect Soft-Story Buildings')
     header = st.empty()
@@ -46,7 +63,7 @@ if __name__ == '__main__':
         progress_text.text('Loading Model')
         progress_bar = st.empty()
         progress_bar = st.progress(0)
-        addresses = Addresses()
+        addresses = Addresses(api_key_filename)
         number_of_soft_story = 0
         number_of_non_soft_story = 0
         addresses_used = 0
