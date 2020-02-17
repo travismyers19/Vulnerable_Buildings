@@ -1,5 +1,4 @@
 #Ignore images and model files
-*.jpg
 *.h5
 
 # Byte-compiled / optimized / DLL files
